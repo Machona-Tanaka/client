@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import { FaSearch, FaShoppingCart, FaHeart, FaStar, FaRegStar, FaFilter, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import ProductPopup from './ProductPopup';
+import SearchSection from './SearchSection';
+import ProductsGrid from './ProductsGrid';
+import Pagination from './Pagination';
+import OtherUpdates from './OtherUpdates';
+import ErrorComponent from './searchError';
+import ShoppingCartPopup from './ShoppingCartPopup';
+import { FaTimes, FaShoppingCart, FaTrash } from 'react-icons/fa';
+
 import '../../assets/css/ProductDiscovery.css';
 import './css/Products.css';
 
@@ -11,7 +19,56 @@ const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 4;
 
+  // Shopping Cart Code
+   const [cartItems, setCartItems] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Add to cart function
+  const addToCart = (product) => {
+    setCartItems(prevItems => {
+      const existingItem = prevItems.find(item => item.id === product.id);
+      if (existingItem) {
+        return prevItems.map(item =>
+          item.id === product.id 
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prevItems, { ...product, quantity: 1 }];
+    });
+  };
+
+  // Update quantity
+  const updateQuantity = (productId, newQuantity) => {
+    if (newQuantity < 1) return;
+    
+    setCartItems(prevItems =>
+      prevItems.map(item =>
+        item.id === productId 
+          ? { ...item, quantity: newQuantity }
+          : item
+      )
+    );
+  };
+
+  // Remove item
+  const removeItem = (productId) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+  };
+
+  // Checkout
+  const handleCheckout = () => {
+    alert('Proceeding to checkout!');
+    // Your checkout logic here
+  };
+
+
+  // Mock data (would normally come from API)
+  // const topProducts = []; // Your products data
+  // const otherUpdates = []; // Your updates data
   // Mock data for top 5 products with multiple images
   const topProducts = [
     {
@@ -124,28 +181,6 @@ const Products = () => {
         "Wireless pairing",
         "Compact design"
       ]
-    },    {
-      id: 5,
-      name: "Bluetooth Portable Speaker",
-      price: 89.99,
-      discount: 109.99,
-      rating: 4.3,
-      images: [
-        "https://via.placeholder.com/600x600?text=Speaker+Front",
-        "https://via.placeholder.com/600x600?text=Speaker+Top",
-        "https://via.placeholder.com/600x600?text=Speaker+Back",
-        "https://via.placeholder.com/600x600?text=Speaker+Charging"
-      ],
-      category: "Audio",
-      isNew: true,
-      description: "Take your music anywhere with this powerful and portable Bluetooth speaker.",
-      features: [
-        "10-hour playtime",
-        "IPX7 waterproof",
-        "Built-in microphone",
-        "Wireless pairing",
-        "Compact design"
-      ]
     }
   ];
 
@@ -171,75 +206,24 @@ const Products = () => {
     }
   ];
 
-  // Mock search function
+  // Pagination calculations
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = topProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(topProducts.length / productsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       setIsSearching(true);
-      // In a real app, this would be an API call
+      // Mock search implementation
       setTimeout(() => {
-        setSearchResults([
-          {
-            id: 101,
-            name: `Premium ${searchQuery} Pro`,
-            price: 149.99,
-            discount: 179.99,
-            rating: 4.4,
-            images: [
-              "https://via.placeholder.com/600x600?text=Search+Product+1",
-              "https://via.placeholder.com/600x600?text=Search+Product+2"
-            ],
-            category: "Search Results",
-            isNew: true,
-            description: `High-quality ${searchQuery} with professional features.`,
-            features: [
-              "Premium materials",
-              "Advanced functionality",
-              "Long-lasting performance",
-              "User-friendly design"
-            ]
-          },
-          {
-            id: 102,
-            name: `Wireless ${searchQuery} Kit`,
-            price: 79.99,
-            discount: 99.99,
-            rating: 3.9,
-            images: [
-              "https://via.placeholder.com/600x600?text=Wireless+Kit+1",
-              "https://via.placeholder.com/600x600?text=Wireless+Kit+2"
-            ],
-            category: "Search Results",
-            isNew: false,
-            description: `Complete wireless ${searchQuery} solution for everyday use.`,
-            features: [
-              "Wireless connectivity",
-              "Easy setup",
-              "Portable design",
-              "Battery included"
-            ]
-          },
-          {
-            id: 103,
-            name: `${searchQuery} Travel Case`,
-            price: 19.99,
-            discount: 24.99,
-            rating: 4.1,
-            images: [
-              "https://via.placeholder.com/600x600?text=Case+Closed",
-              "https://via.placeholder.com/600x600?text=Case+Open"
-            ],
-            category: "Accessories",
-            isNew: true,
-            description: `Protect your ${searchQuery} with this durable travel case.`,
-            features: [
-              "Shock-absorbent material",
-              "Compact design",
-              "Water-resistant",
-              "Multiple compartments"
-            ]
-          }
-        ]);
+        const results = topProducts.filter(product =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setSearchResults(results);
       }, 500);
     }
   };
@@ -250,302 +234,95 @@ const Products = () => {
     setIsSearching(false);
   };
 
-  // View product details
   const viewProduct = (product) => {
     setSelectedProduct(product);
     setCurrentImageIndex(0);
     setShowPopup(true);
   };
-
-  // Close product popup
+  
   const closePopup = () => {
     setShowPopup(false);
     setSelectedProduct(null);
   };
 
-  // Navigate through product images
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => 
-      prevIndex === selectedProduct.images.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prevIndex) => 
-      prevIndex === 0 ? selectedProduct.images.length - 1 : prevIndex - 1
-    );
-  };
-
-  // Add to cart function
-  const addToCart = (product) => {
-    // In a real app, this would add the product to the cart
-    alert(`${product.name} has been added to your cart!`);
-    closePopup();
-  };
-
-  // Render star ratings
-  const renderStars = (rating) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        i <= rating ? (
-          <FaStar key={i} className="star filled" />
-        ) : (
-          <FaRegStar key={i} className="star" />
-        )
-      );
-    }
-    return stars;
-  };
+ 
 
   return (
     <div className="product-discovery">
       <title>Product Discovery</title>
-      {/* Product Popup */}
-      {showPopup && selectedProduct && (
-        <div className="product-popup-overlay">
-          <div className="product-popup">
-            <button className="close-popup" onClick={closePopup}>
-              <FaTimes />
-            </button>
-            <div className="popup-content">
-              <div className="popup-image-container">
-                <div className="main-image">
-                  <img 
-                    src={selectedProduct.images[currentImageIndex]} 
-                    alt={`${selectedProduct.name} - ${currentImageIndex + 1}`} 
-                  />
-                  {selectedProduct.images.length > 1 && (
-                    <>
-                      <button className="nav-button prev" onClick={prevImage}>
-                        <FaChevronLeft />
-                      </button>
-                      <button className="nav-button next" onClick={nextImage}>
-                        <FaChevronRight />
-                      </button>
-                    </>
-                  )}
-                </div>
-                {selectedProduct.images.length > 1 && (
-                  <div className="thumbnail-gallery">
-                    {selectedProduct.images.map((image, index) => (
-                      <div 
-                        key={index} 
-                        className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
-                        onClick={() => setCurrentImageIndex(index)}
-                      >
-                        <img src={image} alt={`Thumbnail ${index + 1}`} />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div className="popup-details">
-                <h2>{selectedProduct.name}</h2>
-                <div className="popup-category">{selectedProduct.category}</div>
-                <div className="popup-rating">
-                  {renderStars(selectedProduct.rating)}
-                  <span>({selectedProduct.rating})</span>
-                </div>
-                <div className="popup-price">
-                  <span className="current-price">${selectedProduct.price.toFixed(2)}</span>
-                  {selectedProduct.discount && (
-                    <span className="original-price">${selectedProduct.discount.toFixed(2)}</span>
-                  )}
-                </div>
-                <p className="popup-description">{selectedProduct.description}</p>
-                <div className="popup-features">
-                  <h4>Features:</h4>
-                  <ul>
-                    {selectedProduct.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="popup-actions">
-                  <button 
-                    className="add-to-cart-btn"
-                    onClick={() => addToCart(selectedProduct)}
-                  >
-                    <FaShoppingCart className="cart-icon" />
-                    <span>Add to Cart</span>
-                  </button>
-                  <button className="wishlist-btn">
-                    <FaHeart className="wishlist-icon" />
-                    <span>Add to Wishlist</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
+      <ProductPopup
+        product={selectedProduct}
+        showPopup={showPopup}
+        closePopup={closePopup}
+        currentImageIndex={currentImageIndex}
+        setCurrentImageIndex={setCurrentImageIndex}
+        addToCart={addToCart}
+      />
 
-      {/* Hero Section */}
       <div className="hero-section">
         <h1>Discover Amazing Products</h1>
         <p>Shop the latest and greatest from our collection</p>
       </div>
 
-      {/* Search Section */}
-      <div className="search-section">
-        <form onSubmit={handleSearch} className="search-form">
-          <div className="search-input-container">
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Search products, categories, or brands..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            {searchQuery && (
-              <button type="button" className="clear-search" onClick={clearSearch}>
-                &times;
-              </button>
-            )}
-          </div>
-          <button type="submit" className="search-button">
-            Search
-          </button>
-        </form>
+      <SearchSection
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        handleSearch={handleSearch}
+        clearSearch={clearSearch}
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+      />
+      <button onClick={() => setIsCartOpen(true)}>
+        <FaShoppingCart /> Cart ({cartItems.reduce((total, item) => total + item.quantity, 0)})
+      </button>
+      {/* Shopping Cart Popup */}
+      <ShoppingCartPopup
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        cartItems={cartItems}
+        onUpdateQuantity={updateQuantity}
+        onRemoveItem={removeItem}
+        onCheckout={handleCheckout}
+      />
 
-        <div className="filter-options">
-          <button
-            className={`filter-button ${activeFilter === 'latest' ? 'active' : ''}`}
-            onClick={() => setActiveFilter('latest')}
-          >
-            Latest
-          </button>
-          <button
-            className={`filter-button ${activeFilter === 'popular' ? 'active' : ''}`}
-            onClick={() => setActiveFilter('popular')}
-          >
-            Popular
-          </button>
-          <button
-            className={`filter-button ${activeFilter === 'discount' ? 'active' : ''}`}
-            onClick={() => setActiveFilter('discount')}
-          >
-            On Discount
-          </button>
-          <div className="advanced-filter">
-            <FaFilter />
-            <span>More Filters</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
       <div className="main-content">
-        {/* Products Display */}
-        {isSearching ? (
-          <div className="search-results">
-            <h2 className="section-title">
-              Search Results for: <span className="query">"{searchQuery}"</span>
-            </h2>
-            <div className="products-grid minimal">
-              {searchResults.map((product) => (
-                <div key={product.id} className="product-card minimal">
-                  <div className="product-badge">
-                    {product.isNew && <span className="new-badge">New</span>}
-                    <span className="discount-badge">
-                      {Math.round(((product.discount - product.price) / product.discount) * 100)}% Off
-                    </span>
-                  </div>
-                  <div className="product-image">
-                    <img src={product.image} alt={product.name} />
-                    <div className="product-actions">
-                      <button className="action-btn wishlist">
-                        <FaHeart />
-                      </button>
-                      <button className="action-btn cart">
-                        <FaShoppingCart />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="product-info">
-                    <span className="category">{product.category}</span>
-                    <h3>{product.name}</h3>
-                    <div className="price-container">
-                      <span className="current-price">${product.price.toFixed(2)}</span>
-                      <span className="original-price">${product.discount.toFixed(2)}</span>
-                    </div>
-                    <div className="rating">{renderStars(product.rating)}</div>
-                    <button 
-                      className="view-product-btn"
-                      onClick={() => viewProduct(product)}
-                    >
-                      View Product
-                    </button>
-                  </div>
-                </div>
-              ))}
+       {isSearching ? (
+            <div className="search-results">
+              <h2 className="section-title">
+                Search Results for: <span className="query">"{searchQuery}"</span>
+              </h2>
+              {searchResults.length > 0 ? (
+                <ProductsGrid 
+                  products={searchResults} 
+                  viewProduct={viewProduct} 
+                  isFeatured={false}
+                />
+              ) : (
+                <ErrorComponent 
+                  searchQuery={searchQuery} 
+                  onClearSearch={clearSearch}
+                />
+              )}
             </div>
-          </div>
-        ) : (
-          <div className="top-products">
-            <h2 className="section-title">Top 5 Latest Products</h2>
-            <div className="products-grid featured">
-              {topProducts.map((product) => (
-                <div key={product.id} className="product-card featured">
-                  <div className="product-badge">
-                    {product.isNew && <span className="new-badge">New</span>}
-                    <span className="discount-badge">
-                      {Math.round(((product.discount - product.price) / product.discount) * 100)}% Off
-                    </span>
-                  </div>
-                  <div className="product-image">
-                    <img src={product.image} alt={product.name} />
-                    <div className="product-actions">
-                      <button className="action-btn wishlist">
-                        <FaHeart />
-                      </button>
-                      <button className="action-btn cart">
-                        <FaShoppingCart />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="product-info">
-                    <span className="category">{product.category}</span>
-                    <h3>{product.name}</h3>
-                    <div className="price-container">
-                      <span className="current-price">${product.price.toFixed(2)}</span>
-                      <span className="original-price">${product.discount.toFixed(2)}</span>
-                    </div>
-                    <div className="rating">{renderStars(product.rating)}</div>
-                    <button 
-                      className="view-product-btn"
-                      onClick={() => viewProduct(product)}
-                    >
-                      View Product
-                    </button>
-                  </div>
-                </div>
-              ))}
+          ) : (
+          <>
+            <div className="top-products">
+              <h2 className="section-title">Our Products</h2>
+              <ProductsGrid 
+                products={currentProducts} 
+                viewProduct={viewProduct} 
+                isFeatured={true}
+              />{ totalPages > 1 &&
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                paginate={paginate}
+              />}
             </div>
-          </div>
+            <OtherUpdates updates={otherUpdates} />
+          </>
         )}
-
-        {/* Other Updates Section */}
-        <div className="other-updates">
-          <h2 className="section-title">Other Updates</h2>
-          <div className="updates-grid">
-            {otherUpdates.map((update) => (
-              <div key={update.id} className={`update-card ${update.type}`}>
-                <div className="update-content">
-                  <h3>{update.title}</h3>
-                  <span className="update-date">{update.date}</span>
-                  <button className="update-button">
-                    {update.type === 'collection' && 'View Collection'}
-                    {update.type === 'sale' && 'Shop Sale'}
-                    {update.type === 'guide' && 'Read Guide'}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );

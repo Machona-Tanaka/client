@@ -11,6 +11,8 @@ const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 4; // Number of products to show per page
 
   // Mock data for top 5 products with multiple images
   const topProducts = [
@@ -124,6 +126,71 @@ const Products = () => {
         "Wireless pairing",
         "Compact design"
       ]
+    },    
+    {
+      id: 6,
+      name: "Premium Laptop Backpack",
+      price: 59.99,
+      discount: 79.99,
+      rating: 4.6,
+      images: [
+        "https://via.placeholder.com/600x600?text=Backpack+Front",
+        "https://via.placeholder.com/600x600?text=Backpack+Side",
+        "https://via.placeholder.com/600x600?text=Backpack+Inside"
+      ],
+      category: "Accessories",
+      isNew: true,
+      description: "Stylish and functional backpack designed to protect your laptop and accessories.",
+      features: [
+        "Padded laptop compartment",
+        "Multiple pockets",
+        "Water-resistant material",
+        "Ergonomic shoulder straps",
+        "USB charging port"
+      ]
+    },
+    {
+      id: 7,
+      name: "Wireless Charging Pad",
+      price: 34.99,
+      discount: 49.99,
+      rating: 4.1,
+      images: [
+        "https://via.placeholder.com/600x600?text=Charger+Top",
+        "https://via.placeholder.com/600x600?text=Charger+Side"
+      ],
+      category: "Electronics",
+      isNew: false,
+      description: "Charge your compatible devices quickly and conveniently with this wireless charging pad.",
+      features: [
+        "Fast charging compatible",
+        "Non-slip surface",
+        "LED indicator",
+        "Compact design",
+        "Works with most Qi-enabled devices"
+      ]
+    },
+    {
+      id: 8,
+      name: "Smart LED Light Bulb",
+      price: 19.99,
+      discount: 29.99,
+      rating: 4.4,
+      images: [
+        "https://via.placeholder.com/600x600?text=Bulb+On",
+        "https://via.placeholder.com/600x600?text=Bulb+Off",
+        "https://via.placeholder.com/600x600?text=Bulb+App"
+      ],
+      category: "Smart Home",
+      isNew: true,
+      description: "Control your lighting from anywhere with this energy-efficient smart LED bulb.",
+      features: [
+        "16 million colors",
+        "Voice control compatible",
+        "Energy saving",
+        "Scheduling features",
+        "Works with Alexa and Google Assistant"
+      ]
     }
   ];
 
@@ -148,6 +215,15 @@ const Products = () => {
       date: "Jun 8, 2023"
     }
   ];
+
+  // Calculate pagination
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = topProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(topProducts.length / productsPerPage);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   // Mock search function
   const handleSearch = (e) => {
@@ -278,6 +354,7 @@ const Products = () => {
 
   return (
     <div className="product-discovery">
+      <title>Product Discovery</title>
       {/* Product Popup */}
       {showPopup && selectedProduct && (
         <div className="product-popup-overlay">
@@ -358,7 +435,6 @@ const Products = () => {
         </div>
       )}
 
-
       {/* Hero Section */}
       <div className="hero-section">
         <h1>Discover Amazing Products</h1>
@@ -431,7 +507,7 @@ const Products = () => {
                     </span>
                   </div>
                   <div className="product-image">
-                    <img src={product.image} alt={product.name} />
+                    <img src={product.images[0]} alt={product.name} />
                     <div className="product-actions">
                       <button className="action-btn wishlist">
                         <FaHeart />
@@ -461,47 +537,78 @@ const Products = () => {
             </div>
           </div>
         ) : (
-          <div className="top-products">
-            <h2 className="section-title">Top 5 Latest Products</h2>
-            <div className="products-grid featured">
-              {topProducts.map((product) => (
-                <div key={product.id} className="product-card featured">
-                  <div className="product-badge">
-                    {product.isNew && <span className="new-badge">New</span>}
-                    <span className="discount-badge">
-                      {Math.round(((product.discount - product.price) / product.discount) * 100)}% Off
-                    </span>
-                  </div>
-                  <div className="product-image">
-                    <img src={product.image} alt={product.name} />
-                    <div className="product-actions">
-                      <button className="action-btn wishlist">
-                        <FaHeart />
-                      </button>
-                      <button className="action-btn cart">
-                        <FaShoppingCart />
+          <>
+            <div className="top-products">
+              <h2 className="section-title">Our Products</h2>
+              <div className="products-grid featured">
+                {currentProducts.map((product) => (
+                  <div key={product.id} className="product-card featured">
+                    <div className="product-badge">
+                      {product.isNew && <span className="new-badge">New</span>}
+                      <span className="discount-badge">
+                        {Math.round(((product.discount - product.price) / product.discount) * 100)}% Off
+                      </span>
+                    </div>
+                    <div className="product-image">
+                      <img src={product.images[0]} alt={product.name} />
+                      <div className="product-actions">
+                        <button className="action-btn wishlist">
+                          <FaHeart />
+                        </button>
+                        <button className="action-btn cart">
+                          <FaShoppingCart />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="product-info">
+                      <span className="category">{product.category}</span>
+                      <h3>{product.name}</h3>
+                      <div className="price-container">
+                        <span className="current-price">${product.price.toFixed(2)}</span>
+                        <span className="original-price">${product.discount.toFixed(2)}</span>
+                      </div>
+                      <div className="rating">{renderStars(product.rating)}</div>
+                      <button 
+                        className="view-product-btn"
+                        onClick={() => viewProduct(product)}
+                      >
+                        View Product
                       </button>
                     </div>
                   </div>
-                  <div className="product-info">
-                    <span className="category">{product.category}</span>
-                    <h3>{product.name}</h3>
-                    <div className="price-container">
-                      <span className="current-price">${product.price.toFixed(2)}</span>
-                      <span className="original-price">${product.discount.toFixed(2)}</span>
-                    </div>
-                    <div className="rating">{renderStars(product.rating)}</div>
-                    <button 
-                      className="view-product-btn"
-                      onClick={() => viewProduct(product)}
-                    >
-                      View Product
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              
+              {/* Pagination */}
+              <div className="pagination">
+                <button 
+                  onClick={() => paginate(currentPage - 1)} 
+                  disabled={currentPage === 1}
+                  className="pagination-button"
+                >
+                  Previous
+                </button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={`pagination-button ${currentPage === number ? 'active' : ''}`}
+                  >
+                    {number}
+                  </button>
+                ))}
+                
+                <button 
+                  onClick={() => paginate(currentPage + 1)} 
+                  disabled={currentPage === totalPages}
+                  className="pagination-button"
+                >
+                  Next
+                </button>
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {/* Other Updates Section */}

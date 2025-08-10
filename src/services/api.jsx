@@ -96,6 +96,7 @@ const API = {
   // Products
   findProducts: (search, page, limit, filter) => api.get(`/products?search=${search}&page=${page}&limit=${limit}&filter=${filter}`),
   findProduct: (id) => api.get(`/products/single/${id}`),
+  findFrontendProducts: (search, page, limit, filter) => api.get(`/products/frontend?search=${search}&page=${page}&limit=${limit}&filter=${filter}`),
 
   getProductStats: () => api.get('/products/stats'),
 
