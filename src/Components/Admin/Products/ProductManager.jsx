@@ -1,10 +1,10 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductForm from '../Common/DataCapture';
 import { useParams } from 'react-router-dom';
 import api from '../../../services/api';
 
 const ProductManager = () => {
-  const [product, setProduct] = useState({
+  const [data, setProduct] = useState({
     name: '',
     description: '',
     price: '',
@@ -12,54 +12,85 @@ const ProductManager = () => {
     category: '',
     stock: '',
     is_new: false,
-    image_url: '',
+    media: null, // Single file or array for multiple uploads
   });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
 
   const [isEditing, setIsEditing] = useState(false);
+  const { id } = useParams();
 
-  const isEditMode = window.location.href.includes('edit')? true:false;
-    const params = useParams();
-    const { id } = params;
+  useEffect(() => {
+    if (window.location.href.includes('edit') && id) {
+      setIsEditing(true);
 
-    useEffect(() => {
-    if (isEditMode && id) {
-        console.log('You are in edit mode!');
-        setIsEditing(true);
-
-        const formProduct = async () => {
+      const fetchProduct = async () => {
         try {
-            const response = await api.get(`products/${id}`);
-            const product = response.product;
-            console.log(product);
-            setProduct(product);
+          const response = await api.findProduct(id);
+          // console.log("Fetched Product:", response);
+          const productRecord = response.data.product;
+          productRecord.stock = productRecord.stock_quantity; // Adjusting stock field name if necessary
+          console.log('list of a product', productRecord);
+          setProduct(productRecord);
         } catch (err) {
-            console.error('Failed to fetch stats:', err);
+          console.error('Failed to fetch product:', err);
         }
-        };
+      };
 
-        formProduct();
+      fetchProduct();
     }
-}, [isEditMode, id]);
+  }, [id]);
 
   const handleChange = (key, value) => {
-    setProduct((prev) => ({ ...prev, [key]: value }));
+    setProduct(prev => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isEditing) {
-      // 🔁 Update logic here (e.g., API PUT call)
-      console.log('Updating Product:', product);
-    } else {
-      // ➕ Add logic here (e.g., API POST call)
-      console.log('Adding Product:', product);
-    }
+      const formData = new FormData();
+    try{
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === 'image_file' && value) {
+          if (Array.isArray(value)) {
+            value.forEach(file => formData.append('image_file', file));
+          } else {
+            formData.append('image_file', value);
+          }
+        } else {
+          formData.append(key, value);
+        }
+      });
+
+      let response;
+
+      if (isEditing) {
+          response = await api.updateProduct(id, formData);
+          setSuccess('Product updated successfully.');
+          console.log('Product updated successfully:', response);
+      } else {
+          response = await api.createProduct(formData);
+          console.log('Product created successfully:', response);
+          setSuccess('Product created successfully!');
+
+      }
+    } catch (err) {
+      console.error('Failed to submit product:', err);
+      setError(err.message || 'An error occurred while submitting the product.');
+    } 
+
+    setTimeout(() => {
+      setError('');
+      setSuccess('');
+    }, 3000);
   };
 
   return (
     <ProductForm
-      product={product}
+      product={data}
       isEditing={isEditing}
+      error={error}
+      success={success}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
     />

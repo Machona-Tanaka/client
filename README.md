@@ -20,3 +20,4 @@ npm install nodemon
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 npm install @tanstack/react-query
+npm install express multer

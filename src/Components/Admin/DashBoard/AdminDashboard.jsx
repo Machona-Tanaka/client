@@ -22,13 +22,13 @@ const Dashboard = () => {
           // articlesRes,
           // podcastsRes,
           // guidesRes,
-          // productsRes,
+          productsRes,
           usersRes,
         ] = await Promise.all([
           // api.get('/articles/count'),
           // api.get('/podcasts/count'),
           // api.get('/guides/count'),
-          // api.get('/products/count'),
+          api.get('/products/count'),
           api.get('/accounts/count'),
         ]);
 
@@ -36,7 +36,7 @@ const Dashboard = () => {
           // articles: articlesRes.data.count,
           // podcasts: podcastsRes.data.count,
           // guides: guidesRes.data.count,
-          // products: productsRes.data.count,
+          products: productsRes.data.count,
           users: usersRes.data.count,
         });
       } catch (err) {
@@ -52,9 +52,9 @@ const Dashboard = () => {
       <h2>Overview</h2>
       <div className="stats-grid">
         <StatsCard title="Articles" value={stats.articles} icon="article" />
-        <StatsCard title="Podcasts" value={stats.podcasts} icon="podcast" />
+        <StatsCard title="Podcasts" value={stats.podcasts} icon="podcast" trend = {stats.podcast} url_Link='podcasts' />
         <StatsCard title="Guides" value={stats.guides} icon="guide" />
-        <StatsCard title="Products" value={stats.products} icon="product" />
+        <StatsCard title="Products" value={stats.products} icon="product" trend = {stats.products} url_Link='products' />
         <StatsCard title="Users" value={stats.users} icon="user" trend = {stats.users}  url_Link='users' />
       </div>
       

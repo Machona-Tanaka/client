@@ -124,28 +124,6 @@ const Products = () => {
         "Wireless pairing",
         "Compact design"
       ]
-    },    {
-      id: 5,
-      name: "Bluetooth Portable Speaker",
-      price: 89.99,
-      discount: 109.99,
-      rating: 4.3,
-      images: [
-        "https://via.placeholder.com/600x600?text=Speaker+Front",
-        "https://via.placeholder.com/600x600?text=Speaker+Top",
-        "https://via.placeholder.com/600x600?text=Speaker+Back",
-        "https://via.placeholder.com/600x600?text=Speaker+Charging"
-      ],
-      category: "Audio",
-      isNew: true,
-      description: "Take your music anywhere with this powerful and portable Bluetooth speaker.",
-      features: [
-        "10-hour playtime",
-        "IPX7 waterproof",
-        "Built-in microphone",
-        "Wireless pairing",
-        "Compact design"
-      ]
     }
   ];
 
@@ -300,7 +278,6 @@ const Products = () => {
 
   return (
     <div className="product-discovery">
-      <title>Product Discovery</title>
       {/* Product Popup */}
       {showPopup && selectedProduct && (
         <div className="product-popup-overlay">

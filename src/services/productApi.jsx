@@ -7,13 +7,14 @@ const API_URL = import.meta.env.VITE_API_URL||'http://localhost:3000/api';
 
 export const getProducts = async ({ search = '', page = 1, limit = 10, filter = 'all' }) => {
   const products = await api.findProducts(search,page, limit, filter);
-  console.log(products.data.data);
+  console.log(products.data);
   return {
     data: products.data.data ,
-    totalPages: Math.ceil(products.data.length / limit),
+    totalPages: products.data.totalPages,
+    page: products.data.page,
+    limit: products.data.limit,
   };
 };
-
 
 export const getProductStats = async () => {
   const response = await api.getProductStats();
@@ -27,4 +28,9 @@ export const deleteProduct = async (id) => {
 
 export const updateProduct = async ({ id, ...data }) => {
   await axios.patch(`${API_URL}/products/${id}`, data);
+};
+
+export const createProduct = async (data) => {
+  const response = await axios.post(`${API_URL}/products`, data);
+  return response.data;
 };

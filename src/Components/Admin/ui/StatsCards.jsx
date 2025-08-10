@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import './styles/StateCard.css'; // Assuming you have a CSS file for styling
+import { NavLink } from 'react-router-dom';
 
 
 const StatsCard = ({ title, value, icon, color, trend, url_Link }) => {
@@ -55,7 +56,9 @@ const StatsCard = ({ title, value, icon, color, trend, url_Link }) => {
           {value}
           {getTrendIndicator()}
         </div>
-        <button className="btn view-all" onClick = {()=>{window.location.href=url_Link}}>View All</button>
+        <NavLink className="btn view-all" to={`/admin/${url_Link || '#'}`}>
+          View All
+        </NavLink>
       </div>
     </div>
   );

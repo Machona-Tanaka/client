@@ -4,7 +4,7 @@
 const DataTable = ({ columns, data, isLoading, error, currentPage, totalPages, onPageChange }) => {
   if (isLoading) return <div className="text-center py-8">Loading...</div>;
   if (error) return <div className="text-center py-8 text-red-500">Error: {error.message}</div>;
-
+  console.log('DataTable rendered with data:', data);
   return (
     <div>
       <div className="overflow-x-auto">
@@ -36,9 +36,13 @@ const DataTable = ({ columns, data, isLoading, error, currentPage, totalPages, o
                   data.map((row, rowIndex) => (
                     <tr key={rowIndex}>
                       {columns.map((column) => (
+                        
+                        
                         <td key={`${rowIndex}-${column.accessor}`} className="px-6 py-4 whitespace-nowrap">
                           {column.cell ? column.cell(row) : row[column.accessor]}
                         </td>
+
+
                       ))}
                     </tr>
                   ))

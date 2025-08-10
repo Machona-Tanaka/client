@@ -72,7 +72,8 @@ const API = {
   // Podcasts
   getPodcasts: () => api.get('/podcasts'),
   getPodcastById: (id) => api.get(`/podcasts/${id}`),
-  createPodcast: (podcast) => api.post('/podcasts', podcast, {
+
+  createPodcast: (podcast) => api.post('/podcasts/new', podcast, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -89,12 +90,38 @@ const API = {
   updateUser: (id, userData) => api.put(`/accounts/${id}`, userData),
 
   deleteUser: (id) => api.delete(`/accounts/admin/users/${id}`),
+
   changeAccountPassword: (credentials) => api.post('/accounts/change/password', credentials),
 
   // Products
   findProducts: (search, page, limit, filter) => api.get(`/products?search=${search}&page=${page}&limit=${limit}&filter=${filter}`),
   findProduct: (id) => api.get(`/products/single/${id}`),
+
   getProductStats: () => api.get('/products/stats'),
+
+  deleteProduct: (id) => api.delete(`/products/${id}`),
+  deleteProductImage: (id, imageId) => api.delete(`/products/${id}/images/${imageId}`),
+
+  createProduct: (productData) => api.post('/products/new', productData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }),
+
+
+  updateProduct: (id, productData) => api.patch(`/products/${id}`, productData),
+
+
+
+  uploadProductImages: (id, images) => api.post(`/products/${id}/images`, images, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    onUploadProgress: (progressEvent) => {
+      const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+      console.log(`Upload progress: ${progress}%`);
+    }
+  }),
 
 
   // Analytics

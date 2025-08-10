@@ -98,7 +98,8 @@ const DynamicFileUpload = () => {
   };
 
   // Submit all files
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const allFiles = uploadFields.flatMap(field => field.files);
     
     if (allFiles.length === 0) {
@@ -107,9 +108,8 @@ const DynamicFileUpload = () => {
     }
 
     console.log('Files to upload:', allFiles);
-    // Here you would typically send the files to your backend
-    // For Twilio integration, you would need to upload to a server first
-    // then use the public URLs with Twilio's API
+    // Here you would typically handle the file upload logic, e.g., sending to a server
+    
   };
 
   return (

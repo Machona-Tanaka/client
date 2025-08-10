@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 // import { useQuery, useMutation } from '@tanstack/react-query';
 // import { getPodcasts, deletePodcast, updatePodcast } from '../../../services/podcastApi';
 import DataTable from '../Common/DataTable';
+import NabigationButtons from '../Layout/PodcastsNavButtons';
 import PodcastStats from './PodcastStats';
 import { 
   FaBoxOpen, 
@@ -124,7 +125,7 @@ const PodcastDashboard = () => {
   return (
     <div>
 
-
+      <NabigationButtons />
       <PodcastStats />
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">

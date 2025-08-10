@@ -8,14 +8,14 @@ const NavigationButtons = () => {
 
     return (
         <div className="user-management-links">
-            <NavLink to="products/new" className="user-management-link">
+            <NavLink to="podcasts/new" className="user-management-link">
                 <FaUser className="user-management-link-icon" />
-                <span>Create POdCast</ span>
+                <span>Create Podcast</span>
             </NavLink>
 
-            <NavLink to={"products"} className="user-management-link">
+            <NavLink to={"podcasts"} className="user-management-link">
                 <FaUsers  className="user-management-link-icon" />
-                <span>Products Table</span>
+                <span>Podcasts Table</span>
             </NavLink>
             <a onClick = {() => navigate(-1)} className="user-management-link">
                 <FaBackward className="user-management-link-icon" />

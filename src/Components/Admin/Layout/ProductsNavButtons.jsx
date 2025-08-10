@@ -5,22 +5,26 @@ import { NavLink } from 'react-router-dom';
 
 const NavigationButtons = () => {
     const navigate = useNavigate();
+    const reloadPage = (url) => {
+        navigate(url);
+        window.location.reload();
+    };  
 
     return (
         <div className="user-management-links">
-            <NavLink to="products/new" className="user-management-link">
+            <button onClick={() => reloadPage("products/new")} className="user-management-link">
                 <FaUser className="user-management-link-icon" />
-                <span>Create Product</ span>
-            </NavLink>
+                <span>Create Product</span>
+            </button>
 
             <NavLink to={"products"} className="user-management-link">
                 <FaUsers  className="user-management-link-icon" />
                 <span>Products Table</span>
             </NavLink>
-            <a onClick = {() => navigate(-1)} className="user-management-link">
+            <button onClick = {() => navigate(-1)} className="user-management-link">
                 <FaBackward className="user-management-link-icon" />
                 <span>Back</span>
-            </a>
+            </button>
         </div>
     );
 }

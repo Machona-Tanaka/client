@@ -1,0 +1,251 @@
+/* MultiImageUploader.css */
+.multi-image-uploader {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.uploader-title {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* File Input Styling */
+.file-input-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  background-color: #4a6bff;
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  border: none;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.file-input-label:hover {
+  background-color: #3a5bef;
+  transform: translateY(-2px);
+}
+
+.file-input-label:active {
+  transform: translateY(0);
+}
+
+.file-input {
+  display: none;
+}
+
+/* Preview Grid */
+.uploader-content {
+  margin-top: 1.5rem;
+}
+
+.selected-count {
+  color: #4a5568;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.preview-card {
+  position: relative;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.preview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.preview-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.preview-name {
+  font-size: 0.85rem;
+  margin: 0.5rem;
+  color: #2d3748;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preview-size {
+  font-size: 0.75rem;
+  color: #718096;
+  margin: 0 0.5rem 0.5rem;
+}
+
+/* Remove Button */
+.remove-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background-color: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  opacity: 0.9;
+}
+
+.remove-button:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Upload Button */
+.upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.upload-button:hover:not(:disabled) {
+  background-color: #0ea371;
+  transform: translateY(-2px);
+}
+
+.upload-button:disabled {
+  background-color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+/* Progress Bar */
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.progress-bar {
+  flex-grow: 1;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar::-webkit-progress-bar {
+  background-color: #edf2f7;
+}
+
+.progress-bar::-webkit-progress-value {
+  background-color: #4a6bff;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  color: #4a5568;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Response Messages */
+.response-message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  line-height: 1.5;
+}
+
+.response-message.success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.response-message.error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .multi-image-uploader {
+    padding: 1.5rem;
+  }
+  
+  .preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .preview-image {
+    height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .multi-image-uploader {
+    padding: 1rem;
+  }
+  
+  .uploader-title {
+    font-size: 1.5rem;
+  }
+  
+  .preview-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .file-input-label, .upload-button {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .preview-image {
+    height: 100px;
+  }
+}

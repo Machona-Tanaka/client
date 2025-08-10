@@ -80,6 +80,7 @@ const Layout = ({ user, logout }) => {
 
   return (
     <>
+    <title>Admin</title>
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"></link>
       <Navbar />
       {/* Mobile menu button (only visible on small screens) */}
@@ -149,9 +150,9 @@ const Layout = ({ user, logout }) => {
             ''
           )}
 
-        <Paper  elevation={0} sx={{  width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', p: 2}}></Paper>
+        <Paper  elevation={0} sx={{  width: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', pt: 3, ph:2, minheight: '100vh', backgroundColor: '#f5f5f5' }}>
           <Outlet />
-        <Paper />
+        </Paper>
 
         
       </div>
