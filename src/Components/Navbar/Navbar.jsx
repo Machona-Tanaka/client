@@ -5,31 +5,12 @@ import '../../assets/css/Navbar.css';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartItems] = useState(3);
-  // const [searchQuery, setSearchQuery] = useState('');
-  // const [showMobileSearch, setShowMobileSearch] = useState(false);
-
   const location = useLocation();
 
-  // Define the paths where cart and search should appear
-  const showCartAndSearch =
-    location.pathname === '/products' ;
 
   // Show signup/signin on home page
   const showAuthButtons =
     location.pathname === '/' || location.pathname === '/home';
-
-  // const handleSearch = (e) => {
-  //   e.preventDefault();
-  //   if (searchQuery.trim()) {
-  //     alert(`Searching for: ${searchQuery}`);
-  //     // Add your search logic here
-  //   }
-  // };
-
-  // const toggleMobileSearch = () => {
-  //   setShowMobileSearch(!showMobileSearch);
-  // };
 
 
   const [showNavbar, setShowNavbar] = useState(true);
@@ -96,20 +77,6 @@ const Navbar = () => {
           <li><a href="/contact" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
         </ul>
         <div></div>
-
-        {/* Right side icons (search and cart) */}
-        {showCartAndSearch && (
-          <div className="nav-icons">
-            <div className="cart-icon">
-              <a href="/cart">
-                <FaShoppingCart />
-                {cartItems > 0 && (
-                  <span className="cart-count">{cartItems}</span>
-                )}
-              </a>
-            </div>
-          </div>
-        )}
 
         {/* Signup and Signin buttons on home page */}
         {showAuthButtons && (

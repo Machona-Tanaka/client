@@ -51,10 +51,13 @@ const SearchSection = ({
         >
           On Discount
         </button>
-        <div className="advanced-filter">
+        <button
+          className={`advanced-filter ${activeFilter === 'all' ? 'active' : ''}`}
+          onClick={() => setActiveFilter('all')}
+         >
           <FaFilter />
-          <span>More Filters</span>
-        </div>
+          <span>All Products</span>
+         </button>
       </div>
     </div>
   );

@@ -32,7 +32,7 @@ const ProductDashboard = React.lazy(() => import('./Components/Admin/Products/Pr
 const ProductsReview = React.lazy(() => import('./Components/Admin/Products/ProductReviews'));
 const ProductsManager = React.lazy(() => import('./Components/Admin/Products/ProductManager'));
 const PodcastsManager = React.lazy(() => import('./Components/Admin/Podcasts/PodcastDashboard'));
-// const AdminContent = React.lazy(() => import('./Components/Admin/Content'));
+
 
 // Auth context/hook (you'll need to implement this)
 const useAuth = () => {
@@ -79,7 +79,7 @@ const AdminLayout = () => (
     <AdLayout  />
   </>
 );
-
+const ImageUrl = `http://localhost:3000/`;
 
 const router = createBrowserRouter([
 
@@ -99,7 +99,7 @@ const router = createBrowserRouter([
       { path: 'forgot-password', element: <Suspense fallback={<LoadingSpinner />}><ForgotPassword /></Suspense> },
       { path: 'podcast', element: <Suspense fallback={<LoadingSpinner />}><Podcast /></Suspense> },
       { path: 'podcast/watch/:podcastId', element: <Suspense fallback={<LoadingSpinner />}><PodcastPlayer /></Suspense> },
-      { path: 'products', element: <Suspense fallback={<LoadingSpinner />}><Products /></Suspense> },
+      { path: 'products', element: <Suspense fallback={<LoadingSpinner />}><Products ImageUrl={ImageUrl} /></Suspense> },
       { path: 'podarticles', element: <Suspense fallback={<LoadingSpinner />}><ArticleDiscovery /></Suspense> },
       { path: 'podguide', element: <Suspense fallback={<LoadingSpinner />}><PodGuideDiscovery /></Suspense> },
       { path: 'contact', element: <Suspense fallback={<LoadingSpinner />}><Contacts /></Suspense> },

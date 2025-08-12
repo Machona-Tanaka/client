@@ -22,6 +22,17 @@ export const getProductStats = async () => {
   return response.data.data;
 };
 
+export const getFrontPageProducts = async ({ search = '', page = 1, limit = 10, filter = 'all' }) => {
+  const products = await api.findFrontendProducts(search,page, limit, filter);
+  console.log(products.data.data);
+  return {
+    data: products.data.data.products ,
+    totalPages: products.data.data.totalPages,
+    page: products.data.data.page,
+    limit: products.data.data.limit,
+  };
+};
+
 export const deleteProduct = async (id) => {
   await axios.delete(`${API_URL}/products/${id}`);
 };

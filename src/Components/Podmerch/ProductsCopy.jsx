@@ -11,7 +11,7 @@ import api from '../../services/api';
 import '../../assets/css/ProductDiscovery.css';
 import './css/Products.css';
 
-const Products = ({ImageUrl}) => {
+const Products = () => {
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('latest');
@@ -22,8 +22,7 @@ const Products = ({ImageUrl}) => {
   const [topProducts, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const imageLinkUrl = `${ImageUrl}`;
- 
+
   // UI state
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
@@ -61,18 +60,10 @@ const Products = ({ImageUrl}) => {
     return () => clearTimeout(timer);
   }, [fetchProducts]);
 
-  const [successMessage, setSuccessMessage] = useState('');
-
   // Shopping cart functions
   const addToCart = useCallback((product) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === product.id);
-      setSuccessMessage('✅ Successfully added to cart!');
-
-      // Hide message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage('');
-      }, 10000);
       return existingItem
         ? prevItems.map(item =>
             item.id === product.id
@@ -126,6 +117,7 @@ const Products = ({ImageUrl}) => {
     (currentPage - 1) * productsPerPage,
     currentPage * productsPerPage
   );
+
   // Mock data for other updates
   const otherUpdates = [
     {
@@ -134,18 +126,7 @@ const Products = ({ImageUrl}) => {
       type: "collection",
       date: "Jun 10, 2023"
     },
-    {
-      id: 7,
-      title: "Limited Time Offer: 20% Off All Audio",
-      type: "sale",
-      date: "Jun 9, 2023"
-    },
-    {
-      id: 8,
-      title: "How to Choose the Right Headphones - Guide",
-      type: "guide",
-      date: "Jun 8, 2023"
-    }
+    // ... other updates
   ];
 
   return (
@@ -154,13 +135,11 @@ const Products = ({ImageUrl}) => {
 
       <ProductPopup
         product={selectedProduct}
-        ImageUrlpath={imageLinkUrl}
         showPopup={showPopup}
         closePopup={closePopup}
         currentImageIndex={currentImageIndex}
         setCurrentImageIndex={setCurrentImageIndex}
         addToCart={addToCart}
-        successMessage={successMessage}
       />
 
       <div className="hero-section">
@@ -176,26 +155,15 @@ const Products = ({ImageUrl}) => {
         activeFilter={activeFilter}
         setActiveFilter={setActiveFilter}
       />
-    
-      <button 
-        onClick={() => setIsCartOpen(true)} 
-        className="cart-button"
-      >
-        <div className="cart-icon-wrapper">
-          <FaShoppingCart size={25} />
-          {cartItems.length > 0 && (
-            <span className="cart-badge">
-              {cartItems.reduce((total, item) => total + item.quantity, 0)}
-            </span>
-          )}
-        </div>
+
+      <button onClick={() => setIsCartOpen(true)} className="cart-button">
+        <FaShoppingCart /> Cart ({cartItems.reduce((total, item) => total + item.quantity, 0)})
       </button>
 
       <ShoppingCartPopup
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         cartItems={cartItems}
-        Url={imageLinkUrl}
         onUpdateQuantity={updateQuantity}
         onRemoveItem={removeItem}
         onCheckout={handleCheckout}
@@ -214,9 +182,7 @@ const Products = ({ImageUrl}) => {
             <div className="top-products">
               <h2 className="section-title">Our Products</h2>
               <ProductsGrid 
-                products={currentProducts}
-                Url={imageLinkUrl}
-                addToCart ={addToCart}
+                products={currentProducts} 
                 viewProduct={viewProduct} 
                 isFeatured={true}
               />

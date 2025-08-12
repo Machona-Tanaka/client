@@ -2,7 +2,7 @@
 import React from 'react';
 import { FaTimes, FaChevronLeft, FaChevronRight, FaShoppingCart, FaHeart, FaStar, FaRegStar } from 'react-icons/fa';
 
-const ProductPopup = ({ product, showPopup, closePopup, currentImageIndex, setCurrentImageIndex, addToCart }) => {
+const ProductPopup = ({ product, showPopup, closePopup, ImageUrlpath, currentImageIndex, setCurrentImageIndex, addToCart, successMessage }) => {
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -33,6 +33,7 @@ const ProductPopup = ({ product, showPopup, closePopup, currentImageIndex, setCu
 
   return (
     <div className="product-popup-overlay">
+      
       <div className="product-popup">
         <button className="close-popup" onClick={closePopup}>
           <FaTimes />
@@ -41,7 +42,7 @@ const ProductPopup = ({ product, showPopup, closePopup, currentImageIndex, setCu
           <div className="popup-image-container">
             <div className="main-image">
               <img 
-                src={product.images[currentImageIndex]} 
+                src={ImageUrlpath + product.images[currentImageIndex]} 
                 alt={`${product.name} - ${currentImageIndex + 1}`} 
               />
               {product.images.length > 1 && (
@@ -63,7 +64,7 @@ const ProductPopup = ({ product, showPopup, closePopup, currentImageIndex, setCu
                     className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
                     onClick={() => setCurrentImageIndex(index)}
                   >
-                    <img src={image} alt={`Thumbnail ${index + 1}`} />
+                    <img src={ImageUrlpath + image} alt={`Thumbnail ${index + 1}`} />
                   </div>
                 ))}
               </div>
@@ -84,12 +85,17 @@ const ProductPopup = ({ product, showPopup, closePopup, currentImageIndex, setCu
             </div>
             <p className="popup-description">{product.description}</p>
             <div className="popup-features">
-              <h4>Features:</h4>
+              {successMessage && (
+                  <div className="success-message" style={{ color: 'green', marginTop: '10px' }}>
+                    {successMessage}
+                  </div>
+                )}
+              {/* <h4>Features:</h4>
               <ul>
                 {product.features.map((feature, index) => (
                   <li key={index}>{feature}</li>
                 ))}
-              </ul>
+              </ul> */}
             </div>
             <div className="popup-actions">
               <button 
